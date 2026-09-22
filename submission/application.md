@@ -52,9 +52,9 @@ The full official Convex Codex plugin 1.10.0 is installed and enabled. The offic
 
 ## What has been tested
 
-Verified public checkpoint ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b passed 37 unit tests with controlled provider fixtures and ten E2E scenarios together against the public app in 51.8 seconds. The scenarios cover task editing, budgets, synchronization between independent sessions, persistence, household-link isolation, room-focused next steps, mobile drafts, real errors from disabled-provider mutations, keyboard focus, automated accessibility, reduced motion and a no-WebGL fallback.
+Verified public checkpoint 6fd63e0d043f3a799ff1adb7022f75b5cc0e6d52 passed 42 unit tests with controlled provider fixtures and ten E2E scenarios together against the public app in 53.1 seconds. The scenarios cover task editing, budgets, synchronization between independent sessions, persistence, household-link isolation, room-focused next steps, mobile drafts, real errors from disabled-provider mutations, keyboard focus, automated accessibility, reduced motion and a no-WebGL fallback.
 
-[CI run 35688402086](https://github.com/C-Icaro/roomready/actions/runs/35688402086) passed for that checkpoint. These results do not prove live provider integration, recipient delivery, measured user benefit or production-scale performance.
+[CI run 35689190165](https://github.com/C-Icaro/roomready/actions/runs/35689190165) passed for that checkpoint. These results do not prove live provider integration, recipient delivery, measured user benefit or production-scale performance.
 
 The [validation record](./validation.json) gives the measurement environment, exact source revisions and limits. The build log preserves earlier checkpoints without attributing later results to them.
 

@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
   "app": "RoomReady",
-  "verifiedPublicSource": "ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b",
-  "sourceTree": "0dbb4ae9197783cac70505635bd0be7288606201",
+  "verifiedPublicSource": "6fd63e0d043f3a799ff1adb7022f75b5cc0e6d52",
+  "sourceTree": "610ecdcb64cc2dd4ae5430e8dc7cda892092bbca",
   "appUrl": "https://wonderful-vulture-63.convex.site",
   "buildIdentityUrl": "https://wonderful-vulture-63.convex.site/build-info.json",
-  "ciUrl": "https://github.com/C-Icaro/roomready/actions/runs/35688402086",
+  "ciUrl": "https://github.com/C-Icaro/roomready/actions/runs/35689190165",
   "checks": {
     "lint": "passed",
     "typecheck": "passed",
     "build": "passed",
     "unit": {
-      "passed": 37,
+      "passed": 42,
       "providerNetwork": "mocked fixtures, not live evidence"
     },
     "publicE2E": {
       "passed": 10,
-      "durationSeconds": 51.8,
+      "durationSeconds": 53.1,
       "backend": "real production Convex",
       "providerCalls": "disabled; no paid requests made"
     },
@@ -67,7 +67,7 @@
       "Shader precision warnings were observed on this Intel driver without a visible scene failure"
     ],
     "measuredSource": "185549392a14bdacb49fbabc0401e1551c69d7eb",
-    "applicability": "Frontend files and generated asset hashes match the restored ab69e3e frontend. These numbers are retained measurements of 1855493, not a new benchmark of ab69e3e."
+    "applicability": "Frontend source and generated production asset hashes match the restored 6fd63e0 frontend. These are retained measurements of 1855493, not a new benchmark of 6fd63e0."
   },
   "liveIntegrationEvidence": {
     "convex": true,
@@ -76,5 +76,32 @@
     "firecrawl": false,
     "agentmailSendReceive": false
   },
-  "submissionReady": false
+  "submissionReady": false,
+  "publicBuild": {
+    "commit": "6fd63e0d043f3a799ff1adb7022f75b5cc0e6d52",
+    "dirty": false,
+    "builtAt": "2026-09-22T05:03:11.42Z",
+    "staticDeployment": "af09543a-d7fe-4dec-980f-b03e7d4911da"
+  },
+  "corePreview": {
+    "recordedSource": "ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b",
+    "buildTimestamp": "2026-09-22T04:50:34.961Z",
+    "recordedAt": "2026-09-22T04:55:48.428Z",
+    "releaseUrl": "https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22",
+    "videoUrl": "https://github.com/C-Icaro/roomready/releases/download/core-preview-2026-09-22/roomready-core-90s.mp4",
+    "durationSeconds": 90,
+    "width": 1440,
+    "height": 1000,
+    "framesPerSecond": 25,
+    "sha256": "f8344cc30b8d2391cbd8d343fb8c6420b6b267998594f34045852104c8433e81",
+    "syntheticData": true,
+    "realConvexBackend": true,
+    "providerCalls": false,
+    "finalSubmissionVideo": false,
+    "independentBrowserSessions": 2,
+    "continuousSyncProofSeconds": [58, 78],
+    "captureMethod": "Two actual viewport recordings aligned using a shared clock marker before the kept footage. No retiming of the task update.",
+    "review": "Technical inspection of one frame per second throughout and every frame of the sync transition. No continuous human audiovisual review.",
+    "publicDownloadSha256Verified": true
+  }
 }

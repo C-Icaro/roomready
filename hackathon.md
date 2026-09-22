@@ -12,7 +12,7 @@
 - **Auth:** Other (UUIDv4 capability links; anyone with a link can edit that home)
 - **AI models:** gpt-4.1-mini (configured default; not exercised live yet)
 - **Started:** 2026-09-22T04:10:13Z
-- **Last updated:** 2026-09-22T04:55:09Z
+- **Last updated:** 2026-09-22T05:04:51Z
 
 ## Log
 
@@ -51,3 +51,13 @@ Added a single bounded retry for AgentMail inbox GET responses with status 502, 
 Published [ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b](https://github.com/C-Icaro/roomready/commit/ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b) at 2026-09-22T04:50:34.961Z with dirty=false. [CI passed](https://github.com/C-Icaro/roomready/actions/runs/35688402086), and all ten browser scenarios passed on the public deployment in 51.8 seconds. The frontend matches 1855493; an experimental shadow cache did not meet its desktop CPU criterion and was reverted. The existing scene performance measurements retain their original source attribution in `submission/validation.json`.
 
 The app and repository are public. Real sponsor calls, a complete sponsor demonstration, social publication and the final entry remain unverified. No submission-ready claim is made.
+
+### 2026-09-22 - 6fd63e0
+
+A home with 50 saved sources now rejects a new research URL or search before contacting Firecrawl, while an existing URL can still be refreshed. The final transaction counts actual writes, so a concurrent capacity change cannot produce a false saved result (`convex/providers.ts`, `tests/backend.adversarial.test.ts`). Provider limits and error cases use controlled fixtures, not live API calls.
+
+Published [6fd63e0d043f3a799ff1adb7022f75b5cc0e6d52](https://github.com/C-Icaro/roomready/commit/6fd63e0d043f3a799ff1adb7022f75b5cc0e6d52) with dirty=false at 2026-09-22T05:03:11.42Z. [CI passed](https://github.com/C-Icaro/roomready/actions/runs/35689190165): lint, typecheck, build and 42 unit tests (40 backend, two calendar-date tests). All ten browser scenarios passed together on this public deployment in 53.1 seconds. Gitleaks found no secrets in the exported tracked source tree; the historical fixture findings remain disclosed in `submission/validation.json`.
+
+Published the [real 90-second core preview](https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22), filmed on ab69e3e. It shows the procedural scene, task/estimate editing, persistence and continuous two-session Convex synchronization using labelled synthetic data. The public MP4 download hash matches the reviewed file. `submission/media/core-preview.json` records exact provenance. Frontend source and production asset hashes are unchanged in 6fd63e0; the later source-capacity correction is backend-only and is not claimed to have been filmed.
+
+The video explicitly states that live OpenAI, Firecrawl and AgentMail verification remains pending. This is a core preview, not a complete sponsor demonstration or a claim of submission readiness. Social publication, personal eligibility declarations and a submission receipt are still absent.
