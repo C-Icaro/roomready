@@ -1,6 +1,6 @@
 # RoomReady application materials
 
-**Status: draft, not ready to submit.** The public app, repository and a real 90-second core preview are available. Live OpenAI, Firecrawl and AgentMail execution, the complete sponsor demo, a social post, final entrant declarations and a submission receipt are not yet verified. These values are ready to paste into corresponding fields; they are not a claim that the form has been filled or accepted.
+**Status: entry in progress, not confirmed.** The public app, repository, real 90-second core preview and X announcement are available. The actual event form has been opened and partially filled. Live OpenAI, Firecrawl and AgentMail execution, the complete sponsor demo, final entrant declarations and a submission receipt are not yet verified. Filling the form does not establish acceptance or eligibility.
 
 ## Confirmed links and identifiers
 
@@ -18,7 +18,7 @@
 | Backend                        | wonderful-vulture-63                                                                        |
 | Core preview (90 seconds)      | https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22                   |
 | Complete sponsor demo          | Pending real sponsor execution.                                                             |
-| Social post                    | Not published yet.                                                                          |
+| Social post                    | https://x.com/Cicaro_/status/2102429886644380115                                            |
 | Submission receipt             | None recorded.                                                                              |
 
 ## Short description
@@ -58,19 +58,15 @@ Verified public checkpoint 6fd63e0d043f3a799ff1adb7022f75b5cc0e6d52 passed 42 un
 
 The [validation record](./validation.json) gives the measurement environment, exact source revisions and limits. The build log preserves earlier checkpoints without attributing later results to them.
 
-## Social copy for the current state
+## Published social announcement
 
-Draft only; no post has been sent:
-
-> Built RoomReady: a scroll-driven 3D home with shared room tasks and budgets, live on Convex. Sponsor API integrations are implemented but not activated yet. Try it: https://wonderful-vulture-63.convex.site @convex @OpenAI @firecrawl @agentmail
-
-Revise the integration sentence after genuine activation and verification. Use the actual posted URL in the entry; do not invent one.
+The [X announcement](https://x.com/Cicaro_/status/2102429886644380115) was published on September 22, 2026 with the app URL and the four official sponsor mentions. It explicitly states that live sponsor verification is pending. No engagement count or user-adoption claim is made.
 
 ## Required completion before submission
 
 - Verify active, authorized access and available credits for all sponsor APIs; demonstrate real results with clear provenance and a controlled email round trip.
 - Extend the published core preview with genuine sponsor segments and publish the [complete demo](./demo-script.md) in under three minutes. Supply its real URL.
-- Publish the authorized social post and retain its actual URL.
+- Include the verified social-post URL in the actual entry; provide any additional profile links the form requires.
 - Confirm the entrant's registration, age/eligibility, team details and any declarations requested by the real form. This file supplies no invented personal answers.
 - Reconcile `hackathon.md`, the public app, the recorded demo and the final source revision. All submitted links must work without private invitations.
 - Complete the [exact Convex All Gas submission form](https://vibeapps.dev/judging/convex-all-gas-hackathon-openai/submit) and retain a confirmation or entry URL.

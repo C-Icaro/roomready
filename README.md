@@ -6,7 +6,7 @@ A collaborative moving-home planner. Explore a furnished 3D home, organize room 
 
 ![RoomReady's original apartment and shared move planner, with clearly labelled sample data.](./submission/media/roomready-desktop.png)
 
-Built for the Convex All Gas Hackathon on September 22, 2026. The app is publicly deployed with the household workflow working. Watch the [real 90-second core preview](https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22), with English captions and two independent browser sessions. OpenAI, Firecrawl and AgentMail integrations are implemented but remain disabled pending access and credit verification. The complete sponsor demo, social post and completed submission are still pending. See [hackathon.md](./hackathon.md) for the evidence-based build log.
+Built for the Convex All Gas Hackathon on September 22, 2026. The app is publicly deployed with the household workflow working. Watch the [real 90-second core preview](https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22), with English captions and two independent browser sessions. OpenAI, Firecrawl and AgentMail integrations are implemented but remain disabled pending access and credit verification. The [build announcement is published on X](https://x.com/Cicaro_/status/2102429886644380115). The complete sponsor demo and confirmed submission are still pending. See [hackathon.md](./hackathon.md) for the evidence-based build log.
 
 ## Run
 

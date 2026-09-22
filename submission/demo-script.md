@@ -1,6 +1,6 @@
 # RoomReady demo: 2 minutes 50 seconds
 
-**Status:** [RoomReady](https://wonderful-vulture-63.convex.site) and a [real 90-second core preview](https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22) are public. The preview records source ab69e3e, with real Convex persistence and continuous two-session synchronization, synthetic data, English captions and no audio. The script below describes the intended complete sponsor demonstration; it has not been recorded. OpenAI, Firecrawl and AgentMail remain disabled, and no live provider result, social post or submission receipt is recorded. The sponsor segments require activation and verification before using their success narration.
+**Status:** [RoomReady](https://wonderful-vulture-63.convex.site) and a [real 90-second core preview](https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22) are public. The preview records source ab69e3e, with real Convex persistence and continuous two-session synchronization, synthetic data, English captions and no audio. The script below describes the intended complete sponsor demonstration; it has not been recorded. OpenAI, Firecrawl and AgentMail remain disabled, and no live provider result or submission receipt is recorded. The X announcement is now public. The sponsor segments require activation and verification before using their success narration.
 
 **Pitch:** “RoomReady turns a move into one shared home: every room, task, cost and supplier conversation in the same place.”
 
@@ -50,7 +50,7 @@ The [official checklist](https://www.convex.dev/hackathons/all-gas) and [Luma li
 | Root `hackathon.md`          | Current product description, stack, live URL, video link and evidence-based build history; no credentials or personal mail data.                                                                         |
 | Live app                     | Available: [RoomReady](https://wonderful-vulture-63.convex.site), with ten public browser scenarios on the verified checkpoint. Sponsor integrations remain inactive.                                    |
 | Demo video                   | [Core preview available](https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22), 90 seconds. Complete sponsor demonstration pending; the preview alone does not establish readiness. |
-| Social post                  | Pending. Provide an authorized X or LinkedIn post tagging Convex, OpenAI, Firecrawl and AgentMail, using actual evidence.                                                                                |
+| Social post                  | Published: https://x.com/Cicaro_/status/2102429886644380115, with official tags and an explicit statement that live sponsor verification is pending.                                                     |
 | Entry form                   | Final title, description, links and any additional fields inspected at the exact event form.                                                                                                             |
 | Submission outcome           | Pending. A confirmation page, receipt or entry URL must show acceptance before the deadline. An open form is not a receipt.                                                                              |
 
