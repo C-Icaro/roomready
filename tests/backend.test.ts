@@ -4,8 +4,8 @@ import { api, internal } from '../convex/_generated/api';
 import schema from '../convex/schema';
 
 const modules = import.meta.glob('../convex/**/*.ts');
-const TOKEN_A = '66cc7050-889a-4258-b5e1-44d927a19fed';
-const TOKEN_B = 'd986eaaa-3a0c-4a26-a928-fd135427181a';
+const TOKEN_A = crypto.randomUUID();
+const TOKEN_B = crypto.randomUUID();
 const setup = () => convexTest(schema, modules);
 type Test = ReturnType<typeof setup>;
 let tests: Test[];

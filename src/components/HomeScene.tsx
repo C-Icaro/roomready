@@ -50,7 +50,7 @@ export default function HomeScene(props: Props) {
       Math.min(devicePixelRatio, innerWidth < 700 ? 1.25 : 1.5),
     );
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.shadowMap.autoUpdate = false;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 0.84;

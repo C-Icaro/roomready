@@ -41,8 +41,13 @@ export const money = (amount: number) =>
     maximumFractionDigits: 0,
   }).format(amount);
 export function daysUntil(date: string) {
-  return Math.max(
-    0,
-    Math.ceil((new Date(date + "T12:00:00").getTime() - Date.now()) / 86400000),
+  const today = new Date();
+  const [year, month, day] = date.split("-").map(Number);
+  const targetDay = Date.UTC(year, month - 1, day);
+  const currentDay = Date.UTC(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
   );
+  return Math.max(0, Math.round((targetDay - currentDay) / 86400000));
 }

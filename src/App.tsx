@@ -65,7 +65,23 @@ export default function App() {
   const createHome = useMutation(api.homes.createHome);
   const updateHome = useMutation(api.homes.updateHome);
   const addTask = useMutation(api.homes.addTask);
-  const updateTask = useMutation(api.homes.updateTask);
+  const updateTask = useMutation(api.homes.updateTask).withOptimisticUpdate(
+    (store, args) => {
+      const current = store.getQuery(api.homes.getHome, { token: args.token });
+      if (!current) return;
+      const { taskId, token: _token, ...patch } = args;
+      store.setQuery(
+        api.homes.getHome,
+        { token: args.token },
+        {
+          ...current,
+          tasks: current.tasks.map((task) =>
+            task._id === taskId ? { ...task, ...patch } : task,
+          ),
+        },
+      );
+    },
+  );
   const deleteTask = useMutation(api.homes.deleteTask);
   const research = useMutation(api.homes.research);
   const plan = useMutation(api.homes.plan);
@@ -82,6 +98,15 @@ export default function App() {
   const [searchText, setSearchText] = useState("");
   const [showDone, setShowDone] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const changed = () => setReducedMotion(query.matches);
+    query.addEventListener("change", changed);
+    return () => query.removeEventListener("change", changed);
+  }, []);
   const [sceneMode, setSceneMode] = useState<"3d" | "plan">("3d");
   const [editing, setEditing] = useState<Doc<"tasks"> | null>(null);
   const [sending, setSending] = useState<Id<"messages"> | null>(null);
@@ -142,6 +167,8 @@ export default function App() {
   }
   function focusRoom(next: RoomId | "all") {
     setRoom(next);
+    if (next === "all" && tab === "home")
+      window.scrollTo({ top: 0, behavior: "instant" });
     if (tab !== "home" && tab !== "plan") navigate("home");
   }
   if (!data)
@@ -151,7 +178,7 @@ export default function App() {
           <span className="brand-mark">
             <Home />
           </span>
-          roomready<span className="brand-dot">®</span>
+          roomready
         </div>
         <LoaderCircle className="spin" size={28} />
         <h1>Making a little room for you.</h1>
@@ -167,7 +194,13 @@ export default function App() {
   const done = tasks.filter((t) => t.done).length;
   const progress = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
   const cost = tasks.reduce((sum, t) => sum + t.cost, 0);
-  const selectedRoom = rooms.find((r) => r.id === room);
+  const guidedRoom: RoomId | "all" =
+    !reducedMotion && tab === "home" && room === "all" && scrollProgress > 0.28
+      ? scrollProgress > 0.66
+        ? "bedroom"
+        : "kitchen"
+      : room;
+  const selectedRoom = rooms.find((r) => r.id === guidedRoom);
   const filtered = tasks.filter(
     (t) =>
       (room === "all" || t.room === room) &&
@@ -176,7 +209,7 @@ export default function App() {
   );
   const remaining = tasks.filter((t) => !t.done);
   const roomRemaining = remaining.filter(
-    (t) => room === "all" || t.room === room,
+    (t) => guidedRoom === "all" || t.room === guidedRoom,
   );
   const roomProgress = Object.fromEntries(
     rooms.map((r) => {
@@ -208,7 +241,7 @@ export default function App() {
           <span className="brand-mark">
             <Home size={22} />
           </span>
-          roomready<span className="brand-dot">®</span>
+          roomready
         </button>
         <nav className="topnav" aria-label="Workspace">
           {(
@@ -240,9 +273,17 @@ export default function App() {
           <span
             className={`connection ${connection.isWebSocketConnected ? "online" : ""}`}
           >
-            {connection.isWebSocketConnected ? "Saved live" : "Reconnecting"}
+            {connection.isWebSocketConnected
+              ? busy
+                ? "Saving…"
+                : "Saved live"
+              : "Reconnecting"}
           </span>
-          <button className="share-button" onClick={() => setModal("share")}>
+          <button
+            className="share-button"
+            aria-label="Share home"
+            onClick={() => setModal("share")}
+          >
             <Share2 size={16} />
             <span>Share home</span>
           </button>
@@ -317,17 +358,19 @@ export default function App() {
                     <span className="little-square" /> A LITTLE CLOSER TO HOME
                   </div>
                   <h1>
-                    {room === "all" ? "A fresh start." : selectedRoom?.name}
+                    {guidedRoom === "all"
+                      ? "A fresh start."
+                      : selectedRoom?.name}
                     <br />
-                    {room === "all" ? (
+                    {guidedRoom === "all" ? (
                       <span>Coming together.</span>
                     ) : (
                       <span>Make it yours.</span>
                     )}
                   </h1>
                   <p>
-                    {room === "all"
-                      ? `Your ${home.name.toLowerCase()}, one small step at a time.`
+                    {guidedRoom === "all"
+                      ? "Your next chapter, one small step at a time."
                       : selectedRoom?.description}
                   </p>
                 </div>
@@ -353,9 +396,9 @@ export default function App() {
                     const n = list.filter((t) => t.done).length;
                     return (
                       <button
-                        className={`room-item ${room === r.id ? "active" : ""}`}
+                        className={`room-item ${guidedRoom === r.id ? "active" : ""}`}
                         key={r.id}
-                        onClick={() => setRoom(room === r.id ? "all" : r.id)}
+                        onClick={() => focusRoom(room === r.id ? "all" : r.id)}
                       >
                         <span
                           className="room-icon"
@@ -387,11 +430,7 @@ export default function App() {
                   })}
                   <button
                     className="text-button all-view"
-                    onClick={() => {
-                      setRoom("all");
-                      setScrollProgress(0);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
+                    onClick={() => focusRoom("all")}
                   >
                     View whole home <ArrowUpRight size={15} />
                   </button>
@@ -433,8 +472,8 @@ export default function App() {
                     }
                   >
                     <HomeScene
-                      selectedRoom={room}
-                      onSelectRoom={setRoom}
+                      selectedRoom={guidedRoom}
+                      onSelectRoom={focusRoom}
                       progress={scrollProgress}
                       roomProgress={roomProgress}
                       planView={sceneMode === "plan"}
@@ -505,7 +544,10 @@ export default function App() {
                   )}
                   <button
                     className="text-button"
-                    onClick={() => navigate("plan")}
+                    onClick={() => {
+                      setRoom(guidedRoom);
+                      navigate("plan");
+                    }}
                   >
                     See your move plan <ArrowRight size={16} />
                   </button>

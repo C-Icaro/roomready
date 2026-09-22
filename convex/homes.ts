@@ -384,6 +384,14 @@ export const plan = mutation({
   args: { ...access, prompt: v.optional(v.string()) },
   handler: async (ctx, args) => {
     const home = await requireHome(ctx, args.token);
+    const tasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_home", (q) => q.eq("homeId", home._id))
+      .take(100);
+    if (tasks.length >= 100)
+      throw new ConvexError(
+        "This home has reached its limit of 100 tasks. Remove a task before requesting more planning suggestions.",
+      );
     return queue(
       ctx,
       home._id,

@@ -9,7 +9,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
-    "deploy": "npx @convex-dev/static-hosting deploy",
+    "deploy": "convex deploy --yes && static-hosting deploy --skip-convex",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
@@ -24,6 +24,7 @@
     "three": "0.186.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.63.0",
     "@types/node": "26.6.2",

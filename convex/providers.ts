@@ -118,6 +118,8 @@ export const finish = internalMutation({
   handler: async (ctx, args) => {
     const job = await ctx.db.get(args.jobId);
     if (!job || job.status !== "running") return;
+    let result = args.result;
+    let addedTasks = 0;
     if (args.sources) {
       const existing = await ctx.db
         .query("sources")
@@ -157,9 +159,10 @@ export const finish = internalMutation({
         .withIndex("by_home", (q) => q.eq("homeId", job.homeId))
         .take(100);
       const titles = new Set(tasks.map((t) => t.title.toLowerCase()));
+      let count = tasks.length;
       let order = Math.max(-1, ...tasks.map((t) => t.order)) + 1;
       for (const suggestion of args.suggestions.slice(0, 8)) {
-        if (titles.has(suggestion.title.toLowerCase()) || titles.size >= 100)
+        if (titles.has(suggestion.title.toLowerCase()) || count >= 100)
           continue;
         await ctx.db.insert("tasks", {
           ...suggestion,
@@ -171,7 +174,12 @@ export const finish = internalMutation({
           order: order++,
         });
         titles.add(suggestion.title.toLowerCase());
+        count++;
+        addedTasks++;
       }
+      if (!addedTasks)
+        result =
+          "No tasks were added: the suggestions already exist or this home has reached its 100-task limit.";
     }
     if (args.inbound) {
       const messages = await ctx.db
@@ -199,7 +207,7 @@ export const finish = internalMutation({
       });
     await ctx.db.patch(job._id, {
       status: "completed",
-      result: text(args.result, "Result", 8000),
+      result: text(result, "Result", 8000),
     });
     await activity(
       ctx,
@@ -210,7 +218,9 @@ export const finish = internalMutation({
           ? "Inbox checked with AgentMail."
           : job.type === "research"
             ? "Live source research completed with Firecrawl."
-            : "AI planning suggestions added. Review them before acting.",
+            : addedTasks
+              ? `${addedTasks} AI planning suggestions added. Review them before acting.`
+              : "Planning finished without adding tasks. Check the request status for details.",
     );
   },
 });
@@ -290,11 +300,32 @@ async function request(url: string, key: string, body?: Json): Promise<Json> {
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
       signal: controller.signal,
+      redirect: "error",
     });
     if (!response.ok) throw new ProviderError(response.status);
-    const raw = await response.text();
-    if (raw.length > 600_000)
-      throw new Error("Provider response exceeded the safe size limit.");
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error("Provider response was empty.");
+    const decoder = new TextDecoder();
+    const parts: string[] = [];
+    let bytes = 0;
+    try {
+      while (true) {
+        const chunk = await reader.read();
+        if (chunk.done) break;
+        bytes += chunk.value.byteLength;
+        if (bytes > 600_000) {
+          // Stop consuming the network stream, before decoding or parsing it.
+          await reader.cancel();
+          controller.abort();
+          throw new Error("Provider response exceeded the safe size limit.");
+        }
+        parts.push(decoder.decode(chunk.value, { stream: true }));
+      }
+      parts.push(decoder.decode());
+    } finally {
+      reader.releaseLock();
+    }
+    const raw = parts.join("");
     return object(JSON.parse(raw));
   } finally {
     clearTimeout(timer);
@@ -422,6 +453,8 @@ export const run = internalAction({
       } else if (job.type === "plan") {
         const key = process.env.OPENAI_API_KEY;
         if (!key) throw new Error("OpenAI is not configured.");
+        if (tasks.length >= 100)
+          throw new Error("This home has reached its task limit.");
         const evidence = savedSources.flatMap((source) => {
           const url = safePublicUrl(source.url);
           if (!url) return [];
