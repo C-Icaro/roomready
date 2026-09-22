@@ -12,7 +12,7 @@
 - **Auth:** Other (UUIDv4 capability links; anyone with a link can edit that home)
 - **AI models:** gpt-4.1-mini (configured default; not exercised live yet)
 - **Started:** 2026-09-22T04:10:13Z
-- **Last updated:** 2026-09-22T05:04:51Z
+- **Last updated:** 2026-09-22T16:10:43Z
 
 ## Log
 
@@ -61,3 +61,9 @@ Published [6fd63e0d043f3a799ff1adb7022f75b5cc0e6d52](https://github.com/C-Icaro/
 Published the [real 90-second core preview](https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22), filmed on ab69e3e. It shows the procedural scene, task/estimate editing, persistence and continuous two-session Convex synchronization using labelled synthetic data. The public MP4 download hash matches the reviewed file. `submission/media/core-preview.json` records exact provenance. Frontend source and production asset hashes are unchanged in 6fd63e0; the later source-capacity correction is backend-only and is not claimed to have been filmed.
 
 The video explicitly states that live OpenAI, Firecrawl and AgentMail verification remains pending. This is a core preview, not a complete sponsor demonstration or a claim of submission readiness. Social publication, personal eligibility declarations and a submission receipt are still absent.
+
+### 2026-09-22 - working tree
+
+Published the [build announcement on X](https://x.com/Cicaro_/status/2102429886644380115) with the public app URL and the four official sponsor mentions. The post explicitly says that live sponsor verification is pending. No engagement, adoption or live API success is claimed.
+
+Reopened the actual event submission form before its deadline and filled the verified product links and description. The entry is not confirmed: required profile/declaration details and the image upload remain unresolved. There is no submission receipt. Public app source6fd63e0 and the previously verified video are unchanged.
