@@ -12,7 +12,7 @@
 - **Auth:** Other (UUIDv4 capability links; anyone with a link can edit that home)
 - **AI models:** gpt-4.1-mini (configured default; not exercised live yet)
 - **Started:** 2026-09-22T04:10:13Z
-- **Last updated:** 2026-09-22T04:23:46.860Z
+- **Last updated:** 2026-09-22T05:04:51Z
 
 ## Log
 
@@ -34,4 +34,30 @@ OpenAI, Firecrawl and AgentMail remain inactive in the public deployment. No liv
 
 Verified a real read-only `status` call through the official Convex MCP server bundled with `convex@1.46.0`, using stdio, at 2026-09-22T04:23:46.860Z. Initialization, tool discovery and the status response succeeded for the development deployment. This establishes an MCP invocation separately from the full plugin installation; it does not establish sponsor API execution or use of every plugin feature.
 
-The current working tree adds guided room context, modal focus restoration and further validation. The latest local run passed 22 unit tests (20 backend and two date tests), ten browser scenarios in 52.0 seconds, lint, typecheck and build. These results describe this working tree, not commit 9737dfa or its CI run; publication and public regression checks for the next checkpoint are pending.
+At this pre-publication checkpoint, the working tree added guided room context, modal focus restoration and further validation. That local run passed 22 unit tests (20 backend and two date tests), ten browser scenarios in 52.0 seconds, lint, typecheck and build. Publication and public regression checks followed in 1855493 below; those checks do not belong to 9737dfa.
+
+### 2026-09-22 - 1855493
+
+Published room-guided scroll: the kitchen and bedroom views reveal their next task and keep that room selected when opening the plan. Improved task feedback with optimistic updates and explicit completion values. Corrected calendar-day countdowns, accessible names, modal focus restoration and low-contrast text (`src/App.tsx`, `src/components/HomeScene.tsx`, `src/components/Modal.tsx`, `src/styles.css`).
+
+Hardened provider boundaries with a task-record limit and bounded streaming response consumption. Twenty backend tests and two date tests pass; provider responses remain controlled fixtures. Ten E2E scenarios passed together against the public app in 47.4 seconds, including two-session persistence, scroll context, accessibility and 320px task creation. These are technical checks, not validation with users.
+
+[Source CI passed](https://github.com/C-Icaro/roomready/actions/runs/35686978802). PR #1 merged as 5292f0769a05ceb5b769ba23e55cb3a6430abcd2 with an identical source tree, and [main CI passed](https://github.com/C-Icaro/roomready/actions/runs/35687154455). At this checkpoint, public `build-info.json` reported 185549392a14bdacb49fbabc0401e1551c69d7eb and dirty=false. External sponsor actions remained disabled.
+
+### 2026-09-22 - ab69e3e
+
+Added a single bounded retry for AgentMail inbox GET responses with status 502, 503 or 504, sharing one 25-second deadline. Sends, authentication failures, quota failures and ambiguous network outcomes are not retried (`convex/providers.ts`). Thirty-five backend tests and two date tests pass; provider responses remain controlled fixtures, not live integration evidence.
+
+Published [ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b](https://github.com/C-Icaro/roomready/commit/ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b) at 2026-09-22T04:50:34.961Z with dirty=false. [CI passed](https://github.com/C-Icaro/roomready/actions/runs/35688402086), and all ten browser scenarios passed on the public deployment in 51.8 seconds. The frontend matches 1855493; an experimental shadow cache did not meet its desktop CPU criterion and was reverted. The existing scene performance measurements retain their original source attribution in `submission/validation.json`.
+
+The app and repository are public. Real sponsor calls, a complete sponsor demonstration, social publication and the final entry remain unverified. No submission-ready claim is made.
+
+### 2026-09-22 - 6fd63e0
+
+A home with 50 saved sources now rejects a new research URL or search before contacting Firecrawl, while an existing URL can still be refreshed. The final transaction counts actual writes, so a concurrent capacity change cannot produce a false saved result (`convex/providers.ts`, `tests/backend.adversarial.test.ts`). Provider limits and error cases use controlled fixtures, not live API calls.
+
+Published [6fd63e0d043f3a799ff1adb7022f75b5cc0e6d52](https://github.com/C-Icaro/roomready/commit/6fd63e0d043f3a799ff1adb7022f75b5cc0e6d52) with dirty=false at 2026-09-22T05:03:11.42Z. [CI passed](https://github.com/C-Icaro/roomready/actions/runs/35689190165): lint, typecheck, build and 42 unit tests (40 backend, two calendar-date tests). All ten browser scenarios passed together on this public deployment in 53.1 seconds. Gitleaks found no secrets in the exported tracked source tree; the historical fixture findings remain disclosed in `submission/validation.json`.
+
+Published the [real 90-second core preview](https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22), filmed on ab69e3e. It shows the procedural scene, task/estimate editing, persistence and continuous two-session Convex synchronization using labelled synthetic data. The public MP4 download hash matches the reviewed file. `submission/media/core-preview.json` records exact provenance. Frontend source and production asset hashes are unchanged in 6fd63e0; the later source-capacity correction is backend-only and is not claimed to have been filmed.
+
+The video explicitly states that live OpenAI, Firecrawl and AgentMail verification remains pending. This is a core preview, not a complete sponsor demonstration or a claim of submission readiness. Social publication, personal eligibility declarations and a submission receipt are still absent.

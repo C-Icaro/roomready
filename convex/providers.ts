@@ -42,7 +42,6 @@ export const claim = internalMutation({
       });
       return null;
     }
-    await ctx.db.patch(jobId, { status: "running" });
     const tasks = await ctx.db
       .query("tasks")
       .withIndex("by_home", (q) => q.eq("homeId", home._id))
@@ -51,7 +50,22 @@ export const claim = internalMutation({
       .query("sources")
       .withIndex("by_home", (q) => q.eq("homeId", home._id))
       .order("desc")
-      .take(8);
+      .take(job.type === "research" ? 50 : 8);
+    if (job.type === "research" && sources.length >= 50) {
+      const requestedUrl = safePublicUrl(job.input);
+      if (
+        !requestedUrl ||
+        !sources.some((source) => source.url === requestedUrl)
+      ) {
+        await ctx.db.patch(jobId, {
+          status: "failed",
+          error:
+            "This home has reached its limit of 50 sources. Paste an existing source URL to refresh it. No provider request was made.",
+        });
+        return null;
+      }
+    }
+    await ctx.db.patch(jobId, { status: "running" });
     const message = job.messageId ? await ctx.db.get(job.messageId) : null;
     if (message && message.homeId !== home._id)
       throw new Error("Invalid message ownership.");
@@ -127,7 +141,12 @@ export const finish = internalMutation({
         .take(50);
       const byUrl = new Map(existing.map((s) => [s.url, s]));
       const urls = new Set(byUrl.keys());
+      const processed = new Set<string>();
+      let saved = 0;
+      let limited = 0;
       for (const source of args.sources.slice(0, 5)) {
+        if (processed.has(source.url)) continue;
+        processed.add(source.url);
         const previous = byUrl.get(source.url);
         if (previous) {
           // Pasting a search result enriches the same source rather than duplicating it.
@@ -140,10 +159,14 @@ export const finish = internalMutation({
               capturedAt: Date.now(),
               status: "live",
             });
+            saved++;
           }
           continue;
         }
-        if (urls.has(source.url) || urls.size >= 50) continue;
+        if (urls.size >= 50) {
+          limited++;
+          continue;
+        }
         await ctx.db.insert("sources", {
           ...source,
           homeId: job.homeId,
@@ -151,6 +174,17 @@ export const finish = internalMutation({
           status: "live",
         });
         urls.add(source.url);
+        saved++;
+      }
+      if (args.sources.length) {
+        const capacityNote = limited
+          ? ` ${limited} new source(s) could not be saved because the home reached its 50-source limit.`
+          : "";
+        result = saved
+          ? `Saved or refreshed ${saved} source(s).${capacityNote} Open the source pages to verify current details; excerpts may be incomplete.`
+          : limited
+            ? "No sources were saved because this home reached its 50-source limit while the request was running. Existing sources were kept."
+            : "Existing page excerpts were kept. No sources were changed.";
       }
     }
     if (args.suggestions) {
@@ -290,19 +324,35 @@ class ProviderError extends Error {
 /** All network access stays in actions. Only fixed provider origins are used. */
 async function request(url: string, key: string, body?: Json): Promise<Json> {
   const controller = new AbortController();
+  // One deadline covers the first attempt, optional GET retry and response body.
   const timer = setTimeout(() => controller.abort(), 25_000);
   try {
-    const response = await fetch(url, {
-      method: body ? "POST" : "GET",
-      headers: {
-        Authorization: `Bearer ${key}`,
-        "Content-Type": "application/json",
-      },
-      ...(body ? { body: JSON.stringify(body) } : {}),
-      signal: controller.signal,
-      redirect: "error",
-    });
-    if (!response.ok) throw new ProviderError(response.status);
+    const fetchOnce = () =>
+      fetch(url, {
+        method: body ? "POST" : "GET",
+        headers: {
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+        },
+        ...(body ? { body: JSON.stringify(body) } : {}),
+        signal: controller.signal,
+        redirect: "error",
+      });
+    let response = await fetchOnce();
+    const retryableInboxRead =
+      body === undefined &&
+      url.startsWith("https://api.agentmail.to/v0/inboxes/");
+    if (retryableInboxRead && [502, 503, 504].includes(response.status)) {
+      await response.body?.cancel();
+      controller.signal.throwIfAborted();
+      // At most one retry, only after an explicit transient GET response.
+      // POSTs, network errors, timeouts and quota/auth failures never retry.
+      response = await fetchOnce();
+    }
+    if (!response.ok) {
+      await response.body?.cancel();
+      throw new ProviderError(response.status);
+    }
     const reader = response.body?.getReader();
     if (!reader) throw new Error("Provider response was empty.");
     const decoder = new TextDecoder();

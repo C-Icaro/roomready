@@ -1,0 +1,21 @@
+{
+  "recordedSource": "ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b",
+  "buildTimestamp": "2026-09-22T04:50:34.961Z",
+  "recordedAt": "2026-09-22T04:55:48.428Z",
+  "releaseUrl": "https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22",
+  "videoUrl": "https://github.com/C-Icaro/roomready/releases/download/core-preview-2026-09-22/roomready-core-90s.mp4",
+  "durationSeconds": 90,
+  "width": 1440,
+  "height": 1000,
+  "framesPerSecond": 25,
+  "sha256": "f8344cc30b8d2391cbd8d343fb8c6420b6b267998594f34045852104c8433e81",
+  "syntheticData": true,
+  "realConvexBackend": true,
+  "providerCalls": false,
+  "finalSubmissionVideo": false,
+  "independentBrowserSessions": 2,
+  "continuousSyncProofSeconds": [58, 78],
+  "captureMethod": "Two actual viewport recordings aligned using a shared clock marker before the kept footage. No retiming of the task update.",
+  "review": "Technical inspection of one frame per second throughout and every frame of the sync transition. No continuous human audiovisual review.",
+  "publicDownloadSha256Verified": true
+}
