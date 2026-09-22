@@ -1,23 +1,22 @@
 {
   "schemaVersion": 1,
   "app": "RoomReady",
-  "verifiedPublicSource": "185549392a14bdacb49fbabc0401e1551c69d7eb",
-  "sourceTree": "c05f5856d18f68b4681f295fc57cd72dcdd8a420",
-  "equivalentMainCommit": "5292f0769a05ceb5b769ba23e55cb3a6430abcd2",
+  "verifiedPublicSource": "ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b",
+  "sourceTree": "0dbb4ae9197783cac70505635bd0be7288606201",
   "appUrl": "https://wonderful-vulture-63.convex.site",
   "buildIdentityUrl": "https://wonderful-vulture-63.convex.site/build-info.json",
-  "ciUrl": "https://github.com/C-Icaro/roomready/actions/runs/35687154455",
+  "ciUrl": "https://github.com/C-Icaro/roomready/actions/runs/35688402086",
   "checks": {
     "lint": "passed",
     "typecheck": "passed",
     "build": "passed",
     "unit": {
-      "passed": 22,
+      "passed": 37,
       "providerNetwork": "mocked fixtures, not live evidence"
     },
     "publicE2E": {
       "passed": 10,
-      "durationSeconds": 47.4,
+      "durationSeconds": 51.8,
       "backend": "real production Convex",
       "providerCalls": "disabled; no paid requests made"
     },
@@ -66,7 +65,9 @@
       "rAF cadence does not prove every frame was presented",
       "renderer.render CPU duration is not GPU execution time",
       "Shader precision warnings were observed on this Intel driver without a visible scene failure"
-    ]
+    ],
+    "measuredSource": "185549392a14bdacb49fbabc0401e1551c69d7eb",
+    "applicability": "Frontend files and generated asset hashes match the restored ab69e3e frontend. These numbers are retained measurements of 1855493, not a new benchmark of ab69e3e."
   },
   "liveIntegrationEvidence": {
     "convex": true,

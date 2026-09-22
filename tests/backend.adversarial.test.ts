@@ -26,6 +26,25 @@ async function homeWithInbox(t: ReturnType<typeof setup>) {
     ctx.db.patch(homeId, { inboxId: "controlled@agentmail.to" }),
   );
 }
+async function homeWithSources(t: ReturnType<typeof setup>, count = 50) {
+  const homeId = await t.mutation(api.homes.createHome, {
+    token: TOKEN,
+    demo: false,
+  });
+  await t.run(async (ctx) => {
+    for (let index = 0; index < count; index++)
+      await ctx.db.insert("sources", {
+        homeId,
+        title: `Saved source ${index}`,
+        url: `https://example.com/source-${index}`,
+        summary: "Original excerpt.",
+        category: "Scraped page",
+        status: "live",
+        capturedAt: Date.now(),
+      });
+  });
+  return homeId;
+}
 
 beforeEach(() => {
   tests = [];
@@ -165,6 +184,117 @@ describe("adversarial provider boundaries", () => {
     ).toBe("failed");
     expect(canceled).toBe(true);
     expect(pulled).toBeLessThan(chunks.length);
+  });
+});
+
+describe("source storage capacity", () => {
+  it.each(["https://example.com/new-source", "new sofa research"])(
+    "does not request a provider for %s when all source slots are occupied",
+    async (query) => {
+      const t = backend();
+      await homeWithSources(t);
+      const jobId = await t.mutation(api.homes.research, {
+        token: TOKEN,
+        query,
+      });
+      await t.action(internal.providers.run, { jobId });
+      const view = await t.query(api.homes.getHome, { token: TOKEN });
+      expect(fetch).not.toHaveBeenCalled();
+      expect(view?.sources).toHaveLength(50);
+      expect(view?.jobs[0]).toMatchObject({
+        status: "failed",
+        error: expect.stringContaining("No provider request was made"),
+      });
+    },
+  );
+
+  it("refreshes an existing URL at capacity, including a source outside the latest eight", async () => {
+    const t = backend();
+    await homeWithSources(t);
+    const mock = vi.fn(async () =>
+      json({
+        success: true,
+        data: {
+          markdown: "Refreshed dimensions: 180 cm.",
+          metadata: {
+            title: "Current dimensions",
+            sourceURL: "https://example.com/source-0",
+          },
+        },
+      }),
+    );
+    vi.stubGlobal("fetch", mock);
+    const jobId = await t.mutation(api.homes.research, {
+      token: TOKEN,
+      query: "https://example.com/source-0",
+    });
+    await t.action(internal.providers.run, { jobId });
+    const view = await t.query(api.homes.getHome, { token: TOKEN });
+    expect(mock).toHaveBeenCalledTimes(1);
+    expect(view?.sources).toHaveLength(50);
+    expect(
+      view?.sources.find((source) => source.url.endsWith("/source-0"))?.summary,
+    ).toBe("Refreshed dimensions: 180 cm.");
+    expect(view?.jobs[0]).toMatchObject({
+      status: "completed",
+      result: expect.stringContaining("Saved or refreshed 1 source"),
+    });
+  });
+
+  it("reports no saved source if the final slot fills while a request is running", async () => {
+    const t = backend();
+    const homeId = await homeWithSources(t, 49);
+    const jobId = await t.mutation(api.homes.research, {
+      token: TOKEN,
+      query: "https://example.com/new-source",
+    });
+    expect(
+      await t.mutation(internal.providers.claim, { jobId }),
+    ).not.toBeNull();
+    // Simulate a competing completion after the worker's preflight.
+    await t.run((ctx) =>
+      ctx.db.insert("sources", {
+        homeId,
+        title: "Concurrent source",
+        url: "https://example.com/concurrent",
+        summary: "Another result.",
+        category: "Research",
+        status: "live",
+        capturedAt: Date.now(),
+      }),
+    );
+    await t.mutation(internal.providers.finish, {
+      jobId,
+      result: "Saved a live page excerpt with its source URL.",
+      sources: [
+        {
+          title: "New source",
+          url: "https://example.com/new-source",
+          summary: "Fresh excerpt.",
+          category: "Scraped page",
+        },
+      ],
+    });
+    const view = await t.query(api.homes.getHome, { token: TOKEN });
+    expect(view?.sources).toHaveLength(50);
+    expect(
+      view?.sources.some((source) => source.url.endsWith("/new-source")),
+    ).toBe(false);
+    expect(view?.jobs[0].result).toContain("No sources were saved");
+    expect(view?.jobs[0].result).not.toContain("Saved a live");
+  });
+
+  it("keeps planner evidence bounded to eight sources after the capacity preflight change", async () => {
+    const t = backend();
+    await homeWithSources(t);
+    const jobId = await t.mutation(api.homes.plan, { token: TOKEN });
+    const context = await t.mutation(internal.providers.claim, { jobId });
+    expect(context?.sources).toHaveLength(8);
+    await t.mutation(internal.providers.fail, {
+      jobId,
+      error: "Fixture finished without calling a provider.",
+    });
+    expect(fetch).not.toHaveBeenCalled();
   });
 });
 

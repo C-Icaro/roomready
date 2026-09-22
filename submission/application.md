@@ -1,24 +1,25 @@
 # RoomReady application materials
 
-**Status: draft, not ready to submit.** The public app and repository are available. Live OpenAI, Firecrawl and AgentMail execution, a demo video, a social post, final entrant declarations and a submission receipt are not yet verified. These values are ready to paste into corresponding fields; they are not a claim that the form has been filled or accepted.
+**Status: draft, not ready to submit.** The public app, repository and a real 90-second core preview are available. Live OpenAI, Firecrawl and AgentMail execution, the complete sponsor demo, a social post, final entrant declarations and a submission receipt are not yet verified. These values are ready to paste into corresponding fields; they are not a claim that the form has been filled or accepted.
 
 ## Confirmed links and identifiers
 
-| Item                           | Value                                                         |
-| ------------------------------ | ------------------------------------------------------------- |
-| Project title                  | RoomReady                                                     |
-| Tagline                        | Move together, one room at a time.                            |
-| Live app                       | https://wonderful-vulture-63.convex.site                      |
-| Repository                     | https://github.com/C-Icaro/roomready                          |
-| Build log                      | https://github.com/C-Icaro/roomready/blob/main/hackathon.md   |
-| Pull request                   | https://github.com/C-Icaro/roomready/pull/1                   |
-| First meaningful commit        | 9737dfac4f8226acf50713f3f18bc0eafd99690c                      |
-| First meaningful commit time   | 2026-09-22T04:10:13Z                                          |
-| Passing CI run for that commit | https://github.com/C-Icaro/roomready/actions/runs/35685864867 |
-| Backend                        | wonderful-vulture-63                                          |
-| Demo video                     | Not recorded or published yet.                                |
-| Social post                    | Not published yet.                                            |
-| Submission receipt             | None recorded.                                                |
+| Item                           | Value                                                                                       |
+| ------------------------------ | ------------------------------------------------------------------------------------------- |
+| Project title                  | RoomReady                                                                                   |
+| Tagline                        | Move together, one room at a time.                                                          |
+| Live app                       | https://wonderful-vulture-63.convex.site                                                    |
+| Repository                     | https://github.com/C-Icaro/roomready                                                        |
+| Build log                      | https://github.com/C-Icaro/roomready/blob/main/hackathon.md                                 |
+| Implementation pull requests   | https://github.com/C-Icaro/roomready/pull/1 and https://github.com/C-Icaro/roomready/pull/2 |
+| First meaningful commit        | 9737dfac4f8226acf50713f3f18bc0eafd99690c                                                    |
+| First meaningful commit time   | 2026-09-22T04:10:13Z                                                                        |
+| Passing CI run for that commit | https://github.com/C-Icaro/roomready/actions/runs/35685864867                               |
+| Backend                        | wonderful-vulture-63                                                                        |
+| Core preview (90 seconds)      | https://github.com/C-Icaro/roomready/releases/tag/core-preview-2026-09-22                   |
+| Complete sponsor demo          | Pending real sponsor execution.                                                             |
+| Social post                    | Not published yet.                                                                          |
+| Submission receipt             | None recorded.                                                                              |
 
 ## Short description
 
@@ -51,11 +52,11 @@ The full official Convex Codex plugin 1.10.0 is installed and enabled. The offic
 
 ## What has been tested
 
-The baseline has 17 backend tests with controlled provider fixtures. Seven browser scenarios passed against the first public app across an initial run and a targeted rerun. The scenarios cover task editing, budget changes, synchronization between independent sessions, persistence, household-link isolation, room-focused next steps, mobile drafts, real errors from disabled-provider mutations, reduced motion and a no-WebGL fallback.
+Verified public checkpoint ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b passed 37 unit tests with controlled provider fixtures and ten E2E scenarios together against the public app in 51.8 seconds. The scenarios cover task editing, budgets, synchronization between independent sessions, persistence, household-link isolation, room-focused next steps, mobile drafts, real errors from disabled-provider mutations, keyboard focus, automated accessibility, reduced motion and a no-WebGL fallback.
 
-[CI run 35685864867](https://github.com/C-Icaro/roomready/actions/runs/35685864867) passed for the first meaningful commit. Later changes require their own validation. These results do not prove live provider integration, recipient delivery, measured user benefit or production-scale performance.
+[CI run 35688402086](https://github.com/C-Icaro/roomready/actions/runs/35688402086) passed for that checkpoint. These results do not prove live provider integration, recipient delivery, measured user benefit or production-scale performance.
 
-Published checkpoint 185549392a14bdacb49fbabc0401e1551c69d7eb separately passed 22 unit tests and ten public E2E scenarios (47.4 seconds), alongside lint, typecheck, build and CI. Main commit 5292f0769a05ceb5b769ba23e55cb3a6430abcd2 has an identical source tree and passing CI. The [validation record](./validation.json) gives the measurement environment and limits.
+The [validation record](./validation.json) gives the measurement environment, exact source revisions and limits. The build log preserves earlier checkpoints without attributing later results to them.
 
 ## Social copy for the current state
 
@@ -68,7 +69,7 @@ Revise the integration sentence after genuine activation and verification. Use t
 ## Required completion before submission
 
 - Verify active, authorized access and available credits for all sponsor APIs; demonstrate real results with clear provenance and a controlled email round trip.
-- Record and publish the [demo walkthrough](./demo-script.md) in under three minutes. Supply its real URL.
+- Extend the published core preview with genuine sponsor segments and publish the [complete demo](./demo-script.md) in under three minutes. Supply its real URL.
 - Publish the authorized social post and retain its actual URL.
 - Confirm the entrant's registration, age/eligibility, team details and any declarations requested by the real form. This file supplies no invented personal answers.
 - Reconcile `hackathon.md`, the public app, the recorded demo and the final source revision. All submitted links must work without private invitations.

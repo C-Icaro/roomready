@@ -12,7 +12,7 @@
 - **Auth:** Other (UUIDv4 capability links; anyone with a link can edit that home)
 - **AI models:** gpt-4.1-mini (configured default; not exercised live yet)
 - **Started:** 2026-09-22T04:10:13Z
-- **Last updated:** 2026-09-22T04:23:46.860Z
+- **Last updated:** 2026-09-22T04:55:09Z
 
 ## Log
 
@@ -34,7 +34,7 @@ OpenAI, Firecrawl and AgentMail remain inactive in the public deployment. No liv
 
 Verified a real read-only `status` call through the official Convex MCP server bundled with `convex@1.46.0`, using stdio, at 2026-09-22T04:23:46.860Z. Initialization, tool discovery and the status response succeeded for the development deployment. This establishes an MCP invocation separately from the full plugin installation; it does not establish sponsor API execution or use of every plugin feature.
 
-The current working tree adds guided room context, modal focus restoration and further validation. The latest local run passed 22 unit tests (20 backend and two date tests), ten browser scenarios in 52.0 seconds, lint, typecheck and build. These results describe this working tree, not commit 9737dfa or its CI run; publication and public regression checks for the next checkpoint are pending.
+At this pre-publication checkpoint, the working tree added guided room context, modal focus restoration and further validation. That local run passed 22 unit tests (20 backend and two date tests), ten browser scenarios in 52.0 seconds, lint, typecheck and build. Publication and public regression checks followed in 1855493 below; those checks do not belong to 9737dfa.
 
 ### 2026-09-22 - 1855493
 
@@ -42,4 +42,12 @@ Published room-guided scroll: the kitchen and bedroom views reveal their next ta
 
 Hardened provider boundaries with a task-record limit and bounded streaming response consumption. Twenty backend tests and two date tests pass; provider responses remain controlled fixtures. Ten E2E scenarios passed together against the public app in 47.4 seconds, including two-session persistence, scroll context, accessibility and 320px task creation. These are technical checks, not validation with users.
 
-[Source CI passed](https://github.com/C-Icaro/roomready/actions/runs/35686978802). PR #1 merged as 5292f0769a05ceb5b769ba23e55cb3a6430abcd2 with an identical source tree, and [main CI passed](https://github.com/C-Icaro/roomready/actions/runs/35687154455). The public `build-info.json` reports 185549392a14bdacb49fbabc0401e1551c69d7eb and dirty=false. See `submission/validation.json` for performance, accessibility and secret-scan scope. External sponsor actions remain disabled; video, social and final entry remain pending.
+[Source CI passed](https://github.com/C-Icaro/roomready/actions/runs/35686978802). PR #1 merged as 5292f0769a05ceb5b769ba23e55cb3a6430abcd2 with an identical source tree, and [main CI passed](https://github.com/C-Icaro/roomready/actions/runs/35687154455). At this checkpoint, public `build-info.json` reported 185549392a14bdacb49fbabc0401e1551c69d7eb and dirty=false. External sponsor actions remained disabled.
+
+### 2026-09-22 - ab69e3e
+
+Added a single bounded retry for AgentMail inbox GET responses with status 502, 503 or 504, sharing one 25-second deadline. Sends, authentication failures, quota failures and ambiguous network outcomes are not retried (`convex/providers.ts`). Thirty-five backend tests and two date tests pass; provider responses remain controlled fixtures, not live integration evidence.
+
+Published [ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b](https://github.com/C-Icaro/roomready/commit/ab69e3e7b3683dd1e7a68d6ca4638d308a9af92b) at 2026-09-22T04:50:34.961Z with dirty=false. [CI passed](https://github.com/C-Icaro/roomready/actions/runs/35688402086), and all ten browser scenarios passed on the public deployment in 51.8 seconds. The frontend matches 1855493; an experimental shadow cache did not meet its desktop CPU criterion and was reverted. The existing scene performance measurements retain their original source attribution in `submission/validation.json`.
+
+The app and repository are public. Real sponsor calls, a complete sponsor demonstration, social publication and the final entry remain unverified. No submission-ready claim is made.
