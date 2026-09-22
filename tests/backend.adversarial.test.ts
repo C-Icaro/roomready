@@ -17,6 +17,15 @@ function json(value: unknown) {
     headers: { "Content-Type": "application/json" },
   });
 }
+async function homeWithInbox(t: ReturnType<typeof setup>) {
+  const homeId = await t.mutation(api.homes.createHome, {
+    token: TOKEN,
+    demo: false,
+  });
+  await t.run((ctx) =>
+    ctx.db.patch(homeId, { inboxId: "controlled@agentmail.to" }),
+  );
+}
 
 beforeEach(() => {
   tests = [];
@@ -157,4 +166,161 @@ describe("adversarial provider boundaries", () => {
     expect(canceled).toBe(true);
     expect(pulled).toBeLessThan(chunks.length);
   });
+});
+
+describe("bounded read-only provider retries", () => {
+  it.each([502, 503, 504])(
+    "retries one AgentMail GET after HTTP %i and saves the successful result",
+    async (status) => {
+      const t = backend();
+      await homeWithInbox(t);
+      const mock = vi
+        .fn()
+        .mockResolvedValueOnce(new Response(null, { status }))
+        .mockResolvedValueOnce(
+          json({
+            messages: [
+              {
+                message_id: "received-retry",
+                from: "controlled@example.com",
+                subject: "Confirmed",
+                text: "Move-in access confirmed.",
+              },
+            ],
+          }),
+        );
+      vi.stubGlobal("fetch", mock);
+      const jobId = await t.mutation(api.homes.syncInbox, { token: TOKEN });
+      await t.action(internal.providers.run, { jobId });
+      expect(mock).toHaveBeenCalledTimes(2);
+      expect(mock.mock.calls.every(([, init]) => init.method === "GET")).toBe(
+        true,
+      );
+      expect(mock.mock.calls[0][1].signal).toBe(mock.mock.calls[1][1].signal);
+      const view = await t.query(api.homes.getHome, { token: TOKEN });
+      expect(view?.jobs[0].status).toBe("completed");
+      expect(view?.messages).toHaveLength(1);
+    },
+  );
+
+  it("stops at two GET attempts when the transient error persists", async () => {
+    const t = backend();
+    await homeWithInbox(t);
+    const mock = vi.fn(async () => new Response(null, { status: 503 }));
+    vi.stubGlobal("fetch", mock);
+    const jobId = await t.mutation(api.homes.syncInbox, { token: TOKEN });
+    await t.action(internal.providers.run, { jobId });
+    expect(mock).toHaveBeenCalledTimes(2);
+    expect(
+      (await t.query(api.homes.getHome, { token: TOKEN }))?.jobs[0].status,
+    ).toBe("failed");
+  });
+
+  it.each([401, 402, 403, 429, 500])(
+    "does not retry GET HTTP %i",
+    async (status) => {
+      const t = backend();
+      await homeWithInbox(t);
+      const mock = vi.fn(async () => new Response(null, { status }));
+      vi.stubGlobal("fetch", mock);
+      const jobId = await t.mutation(api.homes.syncInbox, { token: TOKEN });
+      await t.action(internal.providers.run, { jobId });
+      expect(mock).toHaveBeenCalledTimes(1);
+      expect(
+        (await t.query(api.homes.getHome, { token: TOKEN }))?.jobs[0].status,
+      ).toBe("failed");
+    },
+  );
+
+  it.each(["research", "plan", "sendEmail"] as const)(
+    "does not retry a %s POST on a transient HTTP error",
+    async (type) => {
+      const t = backend();
+      await homeWithInbox(t);
+      const mock = vi.fn(async () => new Response(null, { status: 503 }));
+      vi.stubGlobal("fetch", mock);
+      let jobId;
+      if (type === "research")
+        jobId = await t.mutation(api.homes.research, {
+          token: TOKEN,
+          query: "sofa",
+        });
+      else if (type === "plan")
+        jobId = await t.mutation(api.homes.plan, { token: TOKEN });
+      else {
+        const messageId = await t.mutation(api.homes.draftEmail, {
+          token: TOKEN,
+          recipient: "controlled@example.com",
+          subject: "Move-in access",
+          body: "Please confirm access.",
+        });
+        const approved = await t.mutation(api.homes.sendEmail, {
+          token: TOKEN,
+          messageId,
+          approval: true,
+        });
+        if (!("jobId" in approved) || !approved.jobId)
+          throw new Error("Expected a queued send.");
+        jobId = approved.jobId;
+      }
+      await t.action(internal.providers.run, { jobId });
+      expect(mock).toHaveBeenCalledTimes(1);
+      expect(
+        (mock.mock.calls[0] as unknown as [string, RequestInit])[1].method,
+      ).toBe("POST");
+      const view = await t.query(api.homes.getHome, { token: TOKEN });
+      expect(view?.jobs[0].status).toBe("failed");
+      if (type === "sendEmail")
+        expect(view?.messages[0].status).toBe("uncertain");
+    },
+  );
+
+  it("shares one 25-second timeout across both attempts and never retries a timeout", async () => {
+    const t = backend();
+    await homeWithInbox(t);
+    let attempts = 0;
+    const mock = vi.fn(async (_url: string, init: RequestInit) => {
+      attempts++;
+      if (attempts === 1) {
+        await vi.advanceTimersByTimeAsync(20_000);
+        return new Response(null, { status: 503 });
+      }
+      const signal = init.signal!;
+      await vi.advanceTimersByTimeAsync(5_000);
+      expect(signal.aborted).toBe(true);
+      signal.throwIfAborted();
+      return json({ messages: [] });
+    });
+    vi.stubGlobal("fetch", mock);
+    const started = Date.now();
+    const jobId = await t.mutation(api.homes.syncInbox, { token: TOKEN });
+    await t.action(internal.providers.run, { jobId });
+    expect(Date.now() - started).toBe(25_000);
+    expect(mock).toHaveBeenCalledTimes(2);
+    expect(
+      (await t.query(api.homes.getHome, { token: TOKEN }))?.jobs[0].status,
+    ).toBe("failed");
+  });
+
+  it.each(["network failure", "timeout"])(
+    "does not retry an ambiguous %s on the first GET",
+    async (failure) => {
+      const t = backend();
+      await homeWithInbox(t);
+      const mock = vi.fn(async (_url: string, init: RequestInit) => {
+        if (failure === "timeout") {
+          await vi.advanceTimersByTimeAsync(25_000);
+          init.signal!.throwIfAborted();
+        }
+        throw new Error("Connection lost");
+      });
+      vi.stubGlobal("fetch", mock);
+      const jobId = await t.mutation(api.homes.syncInbox, { token: TOKEN });
+      await t.action(internal.providers.run, { jobId });
+      expect(mock).toHaveBeenCalledTimes(1);
+      expect(
+        (await t.query(api.homes.getHome, { token: TOKEN }))?.jobs[0].status,
+      ).toBe("failed");
+    },
+  );
 });

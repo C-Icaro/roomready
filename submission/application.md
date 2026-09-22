@@ -4,21 +4,21 @@
 
 ## Confirmed links and identifiers
 
-| Item | Value |
-|---|---|
-| Project title | RoomReady |
-| Tagline | Move together, one room at a time. |
-| Live app | https://wonderful-vulture-63.convex.site |
-| Repository | https://github.com/C-Icaro/roomready |
-| Build log | https://github.com/C-Icaro/roomready/blob/feat/roomready/hackathon.md |
-| Pull request | https://github.com/C-Icaro/roomready/pull/1 |
-| First meaningful commit | 9737dfac4f8226acf50713f3f18bc0eafd99690c |
-| First meaningful commit time | 2026-09-22T04:10:13Z |
+| Item                           | Value                                                         |
+| ------------------------------ | ------------------------------------------------------------- |
+| Project title                  | RoomReady                                                     |
+| Tagline                        | Move together, one room at a time.                            |
+| Live app                       | https://wonderful-vulture-63.convex.site                      |
+| Repository                     | https://github.com/C-Icaro/roomready                          |
+| Build log                      | https://github.com/C-Icaro/roomready/blob/main/hackathon.md   |
+| Pull request                   | https://github.com/C-Icaro/roomready/pull/1                   |
+| First meaningful commit        | 9737dfac4f8226acf50713f3f18bc0eafd99690c                      |
+| First meaningful commit time   | 2026-09-22T04:10:13Z                                          |
 | Passing CI run for that commit | https://github.com/C-Icaro/roomready/actions/runs/35685864867 |
-| Backend | wonderful-vulture-63 |
-| Demo video | Not recorded or published yet. |
-| Social post | Not published yet. |
-| Submission receipt | None recorded. |
+| Backend                        | wonderful-vulture-63                                          |
+| Demo video                     | Not recorded or published yet.                                |
+| Social post                    | Not published yet.                                            |
+| Submission receipt             | None recorded.                                                |
 
 ## Short description
 
@@ -40,12 +40,12 @@ Household access uses a random shared capability link, not individual account au
 
 ## Sponsor integration status
 
-| Sponsor | Implemented product role | Verification status |
-|---|---|---|
-| Convex | Persistent shared data, live queries, mutations, scheduled provider jobs and static hosting. | Public household workflow exercised in browser tests. |
-| OpenAI | Structured planning suggestions using household context and saved source evidence; suggestions are marked for review and assigned no fabricated quote. | Implemented and fixture-tested; no successful live request recorded. |
-| Firecrawl | Search and public-URL scraping, retaining source links, excerpts and retrieval times. | Implemented and fixture-tested; no successful live request recorded. |
-| AgentMail | Draft review, explicit approval, controlled-recipient sending, inbox polling and duplicate suppression. | Draft persistence verified. Real send/receive not exercised; external actions are disabled. |
+| Sponsor   | Implemented product role                                                                                                                               | Verification status                                                                         |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| Convex    | Persistent shared data, live queries, mutations, scheduled provider jobs and static hosting.                                                           | Public household workflow exercised in browser tests.                                       |
+| OpenAI    | Structured planning suggestions using household context and saved source evidence; suggestions are marked for review and assigned no fabricated quote. | Implemented and fixture-tested; no successful live request recorded.                        |
+| Firecrawl | Search and public-URL scraping, retaining source links, excerpts and retrieval times.                                                                  | Implemented and fixture-tested; no successful live request recorded.                        |
+| AgentMail | Draft review, explicit approval, controlled-recipient sending, inbox polling and duplicate suppression.                                                | Draft persistence verified. Real send/receive not exercised; external actions are disabled. |
 
 The full official Convex Codex plugin 1.10.0 is installed and enabled. The official CLI was used for development and deployment. A real read-only `status` call to the official Convex MCP server bundled with `convex@1.46.0` succeeded via stdio against the development deployment at 2026-09-22T04:23:46.860Z. Native desktop tool names remain unavailable in this session. The verified call is separate from plugin installation and does not imply that every plugin feature or sponsor API was exercised.
 
@@ -55,7 +55,7 @@ The baseline has 17 backend tests with controlled provider fixtures. Seven brows
 
 [CI run 35685864867](https://github.com/C-Icaro/roomready/actions/runs/35685864867) passed for the first meaningful commit. Later changes require their own validation. These results do not prove live provider integration, recipient delivery, measured user benefit or production-scale performance.
 
-The current working tree separately passed 22 unit tests, ten local browser scenarios, lint, typecheck and build. Its publication, new CI and public regression evidence must be reconciled before submitting; those results do not belong to the first commit's CI record.
+Published checkpoint 185549392a14bdacb49fbabc0401e1551c69d7eb separately passed 22 unit tests and ten public E2E scenarios (47.4 seconds), alongside lint, typecheck, build and CI. Main commit 5292f0769a05ceb5b769ba23e55cb3a6430abcd2 has an identical source tree and passing CI. The [validation record](./validation.json) gives the measurement environment and limits.
 
 ## Social copy for the current state
 

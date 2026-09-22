@@ -4,6 +4,8 @@ A collaborative moving-home planner. Explore a furnished 3D home, organize room 
 
 **[Open RoomReady](https://wonderful-vulture-63.convex.site)** · [Source](https://github.com/C-Icaro/roomready) · [PR #1](https://github.com/C-Icaro/roomready/pull/1)
 
+![RoomReady's original apartment and shared move planner, with clearly labelled sample data.](./submission/media/roomready-desktop.png)
+
 Built for the Convex All Gas Hackathon on September 22, 2026. The app is publicly deployed with the household workflow working. OpenAI, Firecrawl and AgentMail integrations are implemented but remain disabled pending access and credit verification. A demo video, social post and completed submission are still pending. See [hackathon.md](./hackathon.md) for the evidence-based build log.
 
 ## Run
@@ -40,7 +42,7 @@ The public frontend is [wonderful-vulture-63.convex.site](https://wonderful-vult
 
 The first meaningful commit, [9737dfa](https://github.com/C-Icaro/roomready/commit/9737dfac4f8226acf50713f3f18bc0eafd99690c), was created at `2026-09-22T04:10:13Z`. [CI run 35685864867 passed](https://github.com/C-Icaro/roomready/actions/runs/35685864867). The baseline has 17 backend tests, and seven browser scenarios passed against the first public deployment across an initial run and one targeted rerun. Coverage includes editing and budgets, two-session synchronization, persistence, shared-link isolation, room navigation, mobile drafts, unavailable-provider errors and WebGL/reduced-motion fallbacks. This does not establish live sponsor integration or validate later uncommitted changes.
 
-The latest working tree separately passed 22 unit tests, ten local browser scenarios, lint, typecheck and build. These are local results awaiting a new published checkpoint and public regression run; they are not attributed to the baseline CI run.
+Published checkpoint [1855493](https://github.com/C-Icaro/roomready/commit/185549392a14bdacb49fbabc0401e1551c69d7eb) passed 22 unit tests and ten E2E scenarios on the public deployment, including accessibility and narrow-screen checks. It was merged into main with an identical source tree. [Main CI passed](https://github.com/C-Icaro/roomready/actions/runs/35687154455). [Public build identity](https://wonderful-vulture-63.convex.site/build-info.json) and [validation evidence](./submission/validation.json) record the exact source and scope. Three performance runs per viewport measured median first-canvas readiness of 3.12 s desktop and 3.22 s at mobile width on one Windows/Intel machine; this is not a phone hardware measurement.
 
 ## Access and privacy
 

@@ -16,21 +16,32 @@ type Props = {
 export default function HomeScene(props: Props) {
   const mount = useRef<HTMLDivElement>(null);
   const current = useRef(props);
-  const requestDraw = useRef<() => void>(() => {});
+  const requestDraw = useRef<(invalidateShadows?: boolean) => void>(() => {});
   const modelRef = useRef<ApartmentModel | null>(null);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     current.current = props;
     const model = modelRef.current;
+    let readinessChanged = false;
     if (model) {
-      rooms.forEach((r) =>
-        model.setReadiness(r.id, props.roomProgress[r.id] || 0),
-      );
+      rooms.forEach((r) => {
+        const readiness = THREE.MathUtils.clamp(
+          props.roomProgress[r.id] || 0,
+          0,
+          1,
+        );
+        if (model.rooms[r.id].userData.readiness !== readiness) {
+          // Readiness can hide packing boxes, changing the shadows they cast.
+          model.setReadiness(r.id, readiness);
+          readinessChanged = true;
+        }
+      });
+      // Room selection changes floor emissive colours, not shadow geometry.
       model.setSelected(
         props.selectedRoom === "all" ? null : props.selectedRoom,
       );
     }
-    requestDraw.current();
+    requestDraw.current(readinessChanged);
   }, [props]);
   useEffect(() => {
     const element = mount.current;
@@ -165,8 +176,9 @@ export default function HomeScene(props: Props) {
       )
         raf = requestAnimationFrame(draw);
     }
-    function request() {
-      renderer.shadowMap.needsUpdate = true;
+    function request(invalidateShadows = false) {
+      // Keep pending scene changes dirty while hidden; camera motion reuses the map.
+      if (invalidateShadows) renderer.shadowMap.needsUpdate = true;
       if (!raf && isVisible) {
         lastTime = 0;
         raf = requestAnimationFrame(draw);
@@ -184,7 +196,7 @@ export default function HomeScene(props: Props) {
       camera.top = size;
       camera.bottom = -size;
       camera.updateProjectionMatrix();
-      request();
+      request(true);
     }
     const observer = new ResizeObserver(resize);
     observer.observe(element);
@@ -225,7 +237,7 @@ export default function HomeScene(props: Props) {
       model.setReadiness(r.id, current.current.roomProgress[r.id] || 0),
     );
     resize();
-    request();
+    request(true);
     return () => {
       disposed = true;
       cancelAnimationFrame(raf);

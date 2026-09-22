@@ -290,19 +290,35 @@ class ProviderError extends Error {
 /** All network access stays in actions. Only fixed provider origins are used. */
 async function request(url: string, key: string, body?: Json): Promise<Json> {
   const controller = new AbortController();
+  // One deadline covers the first attempt, optional GET retry and response body.
   const timer = setTimeout(() => controller.abort(), 25_000);
   try {
-    const response = await fetch(url, {
-      method: body ? "POST" : "GET",
-      headers: {
-        Authorization: `Bearer ${key}`,
-        "Content-Type": "application/json",
-      },
-      ...(body ? { body: JSON.stringify(body) } : {}),
-      signal: controller.signal,
-      redirect: "error",
-    });
-    if (!response.ok) throw new ProviderError(response.status);
+    const fetchOnce = () =>
+      fetch(url, {
+        method: body ? "POST" : "GET",
+        headers: {
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+        },
+        ...(body ? { body: JSON.stringify(body) } : {}),
+        signal: controller.signal,
+        redirect: "error",
+      });
+    let response = await fetchOnce();
+    const retryableInboxRead =
+      body === undefined &&
+      url.startsWith("https://api.agentmail.to/v0/inboxes/");
+    if (retryableInboxRead && [502, 503, 504].includes(response.status)) {
+      await response.body?.cancel();
+      controller.signal.throwIfAborted();
+      // At most one retry, only after an explicit transient GET response.
+      // POSTs, network errors, timeouts and quota/auth failures never retry.
+      response = await fetchOnce();
+    }
+    if (!response.ok) {
+      await response.body?.cancel();
+      throw new ProviderError(response.status);
+    }
     const reader = response.body?.getReader();
     if (!reader) throw new Error("Provider response was empty.");
     const decoder = new TextDecoder();

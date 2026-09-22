@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "app": "RoomReady",
+  "verifiedPublicSource": "185549392a14bdacb49fbabc0401e1551c69d7eb",
+  "sourceTree": "c05f5856d18f68b4681f295fc57cd72dcdd8a420",
+  "equivalentMainCommit": "5292f0769a05ceb5b769ba23e55cb3a6430abcd2",
+  "appUrl": "https://wonderful-vulture-63.convex.site",
+  "buildIdentityUrl": "https://wonderful-vulture-63.convex.site/build-info.json",
+  "ciUrl": "https://github.com/C-Icaro/roomready/actions/runs/35687154455",
+  "checks": {
+    "lint": "passed",
+    "typecheck": "passed",
+    "build": "passed",
+    "unit": {
+      "passed": 22,
+      "providerNetwork": "mocked fixtures, not live evidence"
+    },
+    "publicE2E": {
+      "passed": 10,
+      "durationSeconds": 47.4,
+      "backend": "real production Convex",
+      "providerCalls": "disabled; no paid requests made"
+    },
+    "secretScan": {
+      "tool": "Gitleaks 8.30.1",
+      "currentTrackedTreeFindings": 0,
+      "historicalFindings": 2,
+      "historicalReview": "Two synthetic UUID fixtures in isolated convex-test tests, replaced by generated UUIDs. No actual API credential identified."
+    }
+  },
+  "accessibility": {
+    "tool": "axe-core 4.13.0",
+    "screens": ["My home", "Move plan", "Discover", "Inbox", "Settings"],
+    "viewports": ["1440x1000", "390x844"],
+    "reportedViolations": 0,
+    "incompleteResults": 2,
+    "manualChecks": [
+      "Visible text backgrounds for the two incomplete contrast results",
+      "Keyboard focus returns to the settings trigger after Escape",
+      "320px task-creation reflow",
+      "Reduced motion",
+      "Functional no-WebGL room plan"
+    ],
+    "limitation": "Automated and technical inspection, not a complete WCAG certification or a study with users."
+  },
+  "performance": {
+    "environment": "Windows x64, Edge 153.0.4234.48 headless, Intel UHD through ANGLE/D3D11",
+    "procedure": "Three fresh processes per viewport, HTTP cache disabled, no network or CPU throttling, 30 mouse-wheel increments with rAF timestamps. Camera and renderer datasets recorded separately.",
+    "desktop": {
+      "viewport": "1440x1000",
+      "canvasReadyMedianMs": 3120.6,
+      "rafP95MedianMs": 17.0,
+      "rendererCpuP95MedianMs": 2.7
+    },
+    "mobileWidth": {
+      "viewport": "390x844",
+      "canvasReadyMedianMs": 3218.4,
+      "rafP95MedianMs": 16.8,
+      "rendererCpuP95MedianMs": 3.9
+    },
+    "pageErrors": 0,
+    "intervalsOver25Ms": 1,
+    "intervalsOver50Ms": 0,
+    "limitations": [
+      "Responsive viewport emulation is not mobile hardware testing",
+      "rAF cadence does not prove every frame was presented",
+      "renderer.render CPU duration is not GPU execution time",
+      "Shader precision warnings were observed on this Intel driver without a visible scene failure"
+    ]
+  },
+  "liveIntegrationEvidence": {
+    "convex": true,
+    "officialConvexMcpStatus": true,
+    "openai": false,
+    "firecrawl": false,
+    "agentmailSendReceive": false
+  },
+  "submissionReady": false
+}
